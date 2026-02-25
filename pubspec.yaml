@@ -1,0 +1,34 @@
+name: fx_flame
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.3
+  flutter: ^3.27.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Animations
+  animations: ^2.1.1
+  # Tools
+  gap: ^3.0.1
+  logger: ^2.6.2
+  # Assets
+  google_fonts: ^8.0.1
+  # Router
+  go_router: ^17.1.0
+  # Firebase
+  firebase_core: ^4.4.0
+  firebase_database: ^12.1.3
+  sticky_headers: ^0.3.0+2
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
