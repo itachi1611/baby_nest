@@ -1,0 +1,4 @@
+app_identifier("com.fox.babyNest") # Default
+apple_id("") # To be filled by user
+itc_team_id("") # To be filled by user
+team_id("") # To be filled by user

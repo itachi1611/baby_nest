@@ -1,0 +1,2 @@
+package_name("com.fox.baby_nest") # Default
+json_key_file("") # To be filled by user
