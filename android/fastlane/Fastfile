@@ -1,0 +1,35 @@
+default_platform(:android)
+
+platform :android do
+  desc "Build and distribute a flavor"
+  lane :deploy do |options|
+    flavor = options[:flavor]
+
+    # Bump build number
+    # Incrementing the version code can be done by changing the build number in pubspec.yaml
+    # or passing build-number to flutter build
+
+    # Build the APK/AAB
+    # For now, we will build APK
+    sh("cd ../.. && flutter build apk --flavor #{flavor} --release")
+
+    # Distribute to Firebase App Distribution
+    # firebase_app_distribution(
+    #   app: ENV["FIREBASE_ANDROID_APP_ID_#{flavor.upcase}"],
+    #   groups: "testers",
+    #   release_notes: "Built from GitHub Actions"
+    # )
+  end
+
+  lane :deploy_dev do
+    deploy(flavor: "dev")
+  end
+
+  lane :deploy_uat do
+    deploy(flavor: "uat")
+  end
+
+  lane :deploy_prod do
+    deploy(flavor: "prod")
+  end
+end

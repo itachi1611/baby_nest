@@ -1,0 +1,37 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Build and distribute a flavor"
+  lane :deploy do |options|
+    flavor = options[:flavor]
+    scheme = flavor.downcase
+
+    # Pre-build: Copy the correct GoogleService-Info.plist
+    # sh("./Runner/copy_google_service_info.sh")
+
+    # Handle signing with match (requires setup by user)
+    # match(type: "appstore", app_identifier: "com.fox.babyNest.#{flavor}")
+
+    # Build the IPA
+    # sh("cd ../.. && flutter build ipa --flavor #{flavor} --release --export-options-plist=ios/ExportOptions.plist")
+
+    # Distribute to Firebase App Distribution or TestFlight
+    # firebase_app_distribution(
+    #   app: ENV["FIREBASE_IOS_APP_ID_#{flavor.upcase}"],
+    #   groups: "testers"
+    # )
+    # upload_to_testflight
+  end
+
+  lane :deploy_dev do
+    deploy(flavor: "dev")
+  end
+
+  lane :deploy_uat do
+    deploy(flavor: "uat")
+  end
+
+  lane :deploy_prod do
+    deploy(flavor: "prod")
+  end
+end
