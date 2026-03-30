@@ -1,0 +1,82 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - release
+
+jobs:
+  build-android:
+    name: Build Android (${{ matrix.flavor }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        flavor: [dev, uat, prod]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Setup Fastlane
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0'
+          bundler-cache: true
+          working-directory: android
+
+      - name: Build and Distribute Android
+        run: bundle exec fastlane deploy flavor:${{ matrix.flavor }}
+        working-directory: android
+        env:
+          FIREBASE_ANDROID_APP_ID: ${{ secrets[format('FIREBASE_ANDROID_APP_ID_{0}', matrix.flavor.toUpperCase())] }}
+          # ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          # ANDROID_KEYSTORE_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_KEY_PASSWORD }}
+          # ANDROID_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
+          # ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+
+  build-ios:
+    name: Build iOS (${{ matrix.flavor }})
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        flavor: [dev, uat, prod]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Setup Fastlane
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0'
+          bundler-cache: true
+          working-directory: ios
+
+      - name: Build and Distribute iOS
+        run: bundle exec fastlane deploy flavor:${{ matrix.flavor }}
+        working-directory: ios
+        env:
+          # MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          # MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+          # APP_STORE_CONNECT_API_KEY_JSON: ${{ secrets.APP_STORE_CONNECT_API_KEY_JSON }}
+          FIREBASE_IOS_APP_ID: ${{ secrets[format('FIREBASE_IOS_APP_ID_{0}', matrix.flavor.toUpperCase())] }}

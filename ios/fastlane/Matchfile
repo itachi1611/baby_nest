@@ -1,0 +1,3 @@
+git_url("REPLACE_WITH_YOUR_GIT_REPO_URL") # Repository for certificates and profiles
+storage_mode("git")
+type("development") # or 'appstore' or 'adhoc'
